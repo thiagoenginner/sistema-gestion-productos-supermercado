@@ -1,4 +1,18 @@
 #ACTUALIZACION EN LOTE
+def cargar_productos_desde_csv():
+    try:
+        productos = []
+        archivo_csv = open('lista_de_precios - Sheet1.csv', mode='r', encoding='UTF-8')
+        archivo_csv.seek(1)
+
+        for registro in archivo_csv:
+            nombre, precio, grupo = registro.split(',')
+            if not grupo:
+                grupo = None
+            productos.append({"nombre": nombre, "precio": float(precio), "grupo": grupo})
+    
+    except:
+
 def mostrar_menu():
     print("Seleccione una opcion:")
     print("1. Actualizar productos")
@@ -11,6 +25,8 @@ def buscar_producto(productos, busqueda):
     return False
     
 def agregar_producto():
+    try:
+        archivo_csv = open('lista_de_precios - Sheet1.csv', mode w)
     nombre = input("Descripcion:")
     grupo = None
     grupo = input("grupo (No obligatorio):")
@@ -32,16 +48,9 @@ def actualizar_precio(productos, nombre, nuevo_precio):
             
     print("El producto ha sido actualizado.")
 #PP
-productos=[{"nombre":"JUGO TANG MANZANA X 15GR", "precio":200, "grupo":"JUGO TANG X 15GR"},
-           {"nombre":"JUGO TANG NARANJA X 15GR", "precio":200, "grupo":"JUGO TANG X 15GR"},
-           {"nombre":"JUGO TANG PERA X 15GR", "precio":200, "grupo":"JUGO TANG X 15GR"},
-           {"nombre":"MAYONESA HELLMAN´S X 1KG", "precio":1000, "grupo": None},
-           {"nombre":"SAL FINA CELUSAL X 500GR", "precio":500, "grupo": None},
-           {"nombre":"AGUA MINERAL NESTLE X 500ML", "precio":400, "grupo": None},
-           {"nombre":"PAN DE PANCHO BIMBO X 6UD", "precio":1500, "grupo": "PAN DE VIENA"},
-           {"nombre":"PAN DE HAMBURGUESA BIMBO X 4UD", "precio":1500, "grupo": "PAN DE VIENA"}
-           ]
+
 while True:
+    productos = cargar_productos_desde_csv()
     mostrar_menu()
     opcion = input("Ingrese su opcion: ")
     
