@@ -1,5 +1,7 @@
 #ACTUALIZACION EN LOTE
 def cargar_productos_desde_csv():
+    #Crea una lista con los productos del archivo csv donde se encuentran y la devuelve.
+
     try:
         productos = []
         archivo_csv = open('lista_de_precios - Sheet1.csv', mode='r', encoding='UTF-8')
@@ -12,9 +14,10 @@ def cargar_productos_desde_csv():
                 grupo = None
             productos.append({"nombre": nombre, "precio": precio, "grupo": grupo})
     
-    except Exception:
-        print("Se ha producido un error a la hora de cargar la lista de productos al programa.")
-    
+    except FileNotFoundError as m:
+        print(f"El archivo {archivo_csv} no existe. Para mas detalle: {m}")
+    except OSError as m:
+        print(f"Hubo un error relacionado con el sistema operativo. Para mas detalle: {m}")
     finally:
         try:
             archivo_csv.close()
@@ -22,6 +25,7 @@ def cargar_productos_desde_csv():
             print("Se ha producido un error a la hora de cerrar el archivo.")
     return productos
 def guardar_productos_en_csv(productos):
+    #Guarda cualquier cambio hecho a la lista y sobreescribe el archivo csv.
     try:
         archivo_csv = open('lista_de_precios - Sheet1.csv', mode = 'w', encoding='UTF-8')
         archivo_csv.write("PRODUCTO,PRECIO,GRUPO\n")
@@ -30,8 +34,10 @@ def guardar_productos_en_csv(productos):
 
         print("Los cambios se han guardado con exito.")
     
-    except Exception:
-        print("Se ha producido un error a la hora de guardar los cambios.")
+    except FileNotFoundError as m:
+        print(f"El archivo {archivo_csv} no existe. Para mas detalle: {m}")
+    except OSError as m:
+        print(f"Hubo un error relacionado con el sistema operativo. Para mas detalle: {m}")
     
     finally:
         try:
@@ -40,6 +46,8 @@ def guardar_productos_en_csv(productos):
             print("Se ha producido un error a la hora de cerrar el archivo csv.")
             
 def mostrar_menu():
+    #Muesta el menu con todas las funcionalidades que tiene el programa.
+
     print("MENU\n")
     print("Seleccione una opcion:")
     print("1. Actualizar productos")
@@ -47,9 +55,11 @@ def mostrar_menu():
     print("3. Guardar cambios")
     print("4. Salir\n")
 
-def solicitar_opcion_valida(opciones_validas):
+def solicitar_opcion_valida(opciones_validas): 
+    #Solicita, valida y devuelve la opcion que se va a elegir en un intervalo determinado.
+    
     while True:
-        try:
+        try:            
             opcion = int(input("Ingrese su opción: "))
             if opcion in opciones_validas:
                 return opcion
@@ -67,6 +77,8 @@ def solicitar_precio():
             print("Por favor, ingrese un valor numérico.")
 
 def buscar_producto(productos, busqueda):
+    #Busca y devuelve un producto de la lista de productos. Si no lo encuentra, devuelve False.
+
     for producto in productos:
         if producto["nombre"] == busqueda:
             return producto
@@ -74,6 +86,8 @@ def buscar_producto(productos, busqueda):
     return False
     
 def agregar_producto(productos):
+    #Solicita los datos correspondientes, agrega el nuevo producto a la lista y devuelve la nueva lista.
+
     print("DATOS DEL PRODUCTO")
     nombre = input("Descripcion:")
     grupo = None
@@ -86,6 +100,8 @@ def agregar_producto(productos):
     return productos
     
 def actualizar_precio(productos, nombre, nuevo_precio):
+    #Actualiza el precio de un solo producto y devuelve la nueva lista.
+
     for producto in productos:
         if producto["nombre"] == nombre:
             producto["precio"] = nuevo_precio
@@ -95,6 +111,8 @@ def actualizar_precio(productos, nombre, nuevo_precio):
     return productos
 
 def actualizar_precio_grupo(productos, grupo, nuevo_precio):
+    #Actualiza los precios de los productos de un grupo y devuelve la nueva lista.
+
     for producto in productos:
         if producto["grupo"] == grupo:
             producto["precio"] = nuevo_precio
@@ -103,15 +121,15 @@ def actualizar_precio_grupo(productos, grupo, nuevo_precio):
     return productos
 
 #PP
-productos = cargar_productos_desde_csv()
+productos = cargar_productos_desde_csv() 
 
 while True:
-    mostrar_menu()
-    opcion = solicitar_opcion_valida([1,2,3,4])
+    mostrar_menu() 
+    opcion = solicitar_opcion_valida([1,2,3,4]) 
     
     if opcion == 1:
         busqueda = input("\nBuscar:")
-        agregado = buscar_producto(productos, busqueda)
+        agregado = buscar_producto(productos, busqueda) 
         
         if agregado:
             for clave, valor in agregado.items():
@@ -120,21 +138,21 @@ while True:
             print("1. Actualizar precio")
             print("2. Actualizar precio en lote")
     
-            opcion = solicitar_opcion_valida([1,2])
+            opcion = solicitar_opcion_valida([1,2]) 
             
             if opcion == 1:
                 nuevo_precio = solicitar_precio()
-                productos = actualizar_precio(productos, busqueda, nuevo_precio)
+                productos = actualizar_precio(productos, busqueda, nuevo_precio) 
                 
             elif opcion == 2:
                 nuevo_precio = solicitar_precio()
-                productos = actualizar_precio_grupo(productos, agregado["grupo"], nuevo_precio)
+                productos = actualizar_precio_grupo(productos, agregado["grupo"], nuevo_precio) 
                 
         else:
             print("El producto no se encuentra en la lista de productos. ¿Desea agregarlo?")
             opcion = solicitar_opcion_valida([0,1])
             if opcion == 1:
-                productos = agregar_producto(productos)
+                productos = agregar_producto(productos) 
     elif opcion == 2:
         productos = agregar_producto(productos)
     
